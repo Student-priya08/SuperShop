@@ -1,0 +1,47 @@
+{% extends 'inventory/base.html' %}
+
+{% block title %}Add Unit - SuperShop{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <i class="bi bi-plus-circle"></i>
+    <h2 class="mb-0">Add Unit</h2>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_unit_name" class="form-label">Unit Name</label>
+                    <input type="text" class="form-control" id="id_unit_name" name="unit_name" placeholder="e.g., Kilogram, Liter" required>
+                    {% if form.unit_name.errors %}
+                        <div class="text-danger small mt-1">{{ form.unit_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="id_abbreviation" class="form-label">Abbreviation</label>
+                    <input type="text" class="form-control" id="id_abbreviation" name="abbreviation" placeholder="e.g., kg, L" maxlength="10" required>
+                    {% if form.abbreviation.errors %}
+                        <div class="text-danger small mt-1">{{ form.abbreviation.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Add Unit</button>
+                <a href="{% url 'units' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

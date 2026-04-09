@@ -1,0 +1,46 @@
+{% extends 'inventory/base.html' %}
+
+{% block title %}Transactions - SuperShop{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <i class="bi bi-receipt"></i>
+    <h2 class="mb-0">Transactions</h2>
+</div>
+
+<div class="d-flex gap-2 mb-4">
+    <div class="flex-grow-1"></div>
+    <a href="{% url 'add_transaction' %}" class="btn btn-success"><i class="bi bi-plus"></i> Add Transaction</a>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Type</th>
+                <th>Quantity</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.product.product_name }}</td>
+                <td>
+                    {% if transaction.transaction_type == 'IN' %}
+                        <span class="badge bg-success">IN</span>
+                    {% else %}
+                        <span class="badge bg-danger">OUT</span>
+                    {% endif %}
+                </td>
+                <td>{{ transaction.quantity }}</td>
+                <td>{{ transaction.transaction_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}

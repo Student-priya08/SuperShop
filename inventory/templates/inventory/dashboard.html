@@ -1,0 +1,122 @@
+{% extends 'inventory/base.html' %}
+
+{% block title %}Dashboard - SuperShop{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <i class="bi bi-speedometer2"></i>
+    <h2 class="mb-0">Dashboard</h2>
+</div>
+
+<!-- Metric Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-box-seam display-6" style="color: #6366f1;"></i>
+                <h6 class="card-title text-muted mt-3 mb-1">Total Products</h6>
+                <p class="display-6 mb-0">{{ total_products }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-bar-chart-line display-6" style="color: #10b981;"></i>
+                <h6 class="card-title text-muted mt-3 mb-1">Total Stock</h6>
+                <p class="display-6 mb-0">{{ total_stock }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-receipt display-6" style="color: #f59e0b;"></i>
+                <h6 class="card-title text-muted mt-3 mb-1">Total Transactions</h6>
+                <p class="display-6 mb-0">{{ total_transactions }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Low Stock Alert and Chart Section -->
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-exclamation-triangle" style="color: #f59e0b;"></i> Low Stock Alert</h6>
+            </div>
+            <div class="card-body">
+                {% if low_stock_products %}
+                    <div class="list-group list-group-flush">
+                        {% for product in low_stock_products %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                                <span class="text-muted">{{ product.product.product_name }}</span>
+                                <span class="badge bg-danger rounded-pill">{{ product.quantity }} units</span>
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center text-success">
+                        <i class="bi bi-check-circle" style="font-size: 2rem; opacity: 0.5;"></i>
+                        <p class="text-muted mt-2 mb-0">All products are well-stocked!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-bar-chart" style="color: #8b5cf6;"></i> Stock Distribution</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="stockChart" height="280"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('stockChart').getContext('2d');
+    const stockChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ stock_labels|safe }},
+            datasets: [{
+                label: 'Stock Quantity',
+                data: {{ stock_data|safe }},
+                backgroundColor: [
+                    '#6366f1',
+                    '#10b981',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#8b5cf6',
+                    '#ec4899',
+                    '#06b6d4'
+                ],
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        },
+                        color: '#6c757d'
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

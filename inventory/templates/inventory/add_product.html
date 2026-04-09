@@ -1,0 +1,78 @@
+{% extends 'inventory/base.html' %}
+
+{% block title %}Add Product - SuperShop{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <i class="bi bi-plus-circle"></i>
+    <h2 class="mb-0">Add Product</h2>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% else %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_product_name" class="form-label">Product Name</label>
+                    <input type="text" class="form-control" id="id_product_name" name="product_name" required>
+                    {% if form.product_name.errors %}
+                        <div class="text-danger small mt-1">{{ form.product_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="id_price" class="form-label">Price</label>
+                    <input type="number" step="0.01" class="form-control" id="id_price" name="price" required>
+                    {% if form.price.errors %}
+                        <div class="text-danger small mt-1">{{ form.price.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="id_category" class="form-label">Category</label>
+                    <select class="form-select" id="id_category" name="category" required>
+                        <option value="">Choose...</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if form.category.errors %}
+                        <div class="text-danger small mt-1">{{ form.category.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="id_unit" class="form-label">Unit</label>
+                    <select class="form-select" id="id_unit" name="unit">
+                        <option value="">Choose...</option>
+                        {% for unit in units %}
+                            <option value="{{ unit.id }}">{{ unit.abbreviation }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if form.unit.errors %}
+                        <div class="text-danger small mt-1">{{ form.unit.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Add Product</button>
+                <a href="{% url 'products' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
